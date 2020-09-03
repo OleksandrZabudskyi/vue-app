@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style>
-.footer--grey {
+.theme--light.v-sheet.footer--grey {
   background-color: #555555;
 }
 
