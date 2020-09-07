@@ -2,7 +2,7 @@
   <v-row>
     <v-row class="result-bar" align="center" justify="space-around">
       <v-col cols="8" sm="6" lg="4">
-        <template v-if="moviesFound && !movie">
+        <template v-if="movies.length && !movie">
           {{ movies.length }} movie found
         </template>
         <template v-if="movie"> Films by {{ movie.genre }} genre</template>
@@ -20,7 +20,7 @@
       </v-col>
     </v-row>
     <v-row align="center" justify="center" class="card-list">
-      <template v-if="moviesFound">
+      <template v-if="movies.length">
         <v-col v-for="movie in movies" :key="movie.id" cols="12" sm="6" lg="4">
           <movie-card :movie="movie"></movie-card>
         </v-col>
@@ -37,41 +37,39 @@
 <script>
 import MovieCard from "./MovieCard";
 import ButtonGroup from "./ButtonGroup";
-import { SEARCH_SUBMITTED } from "../EventBus";
-import { store, mutations } from "../store/store";
+import { MOVIE_SELECTED, SEARCH_SUBMITTED } from "../EventBus";
+import { store } from "../store/store";
 
 export default {
   name: "MovieSearchResult",
   components: { ButtonGroup, MovieCard },
 
   data: () => ({
-    moviesFound: true,
-    movie: ""
+    searchValue: undefined,
+    movie: undefined
   }),
   computed: {
+
     movies() {
-      let movie = store.data[0];
-      store.data[0].id = 0;
-      for (let i = 1; i < 9; i++) {
-        movie.id = i;
-        mutations.setData(movie);
+      if(this.searchValue !== undefined) {
+        return store.data.filter(m => m.producer === this.searchValue);
       }
       return store.data;
     }
   },
   created() {
-    this.$bus.$on(SEARCH_SUBMITTED, this.findMovies);
+    this.$bus.$on(MOVIE_SELECTED, this.addSelectedMovie);
+    this.$bus.$on(SEARCH_SUBMITTED, this.addSearchValue);
   },
   methods: {
-    findMovies(value) {
-      let movie = this.movies.find(m => m.producer === value);
-      if (!value || !movie) {
-        this.moviesFound = false;
-        this.movie = "";
-      } else {
-        this.moviesFound = true;
-        this.movie = movie;
-      }
+    addSelectedMovie(value) {
+      this.movie = value;
+      this.searchValue = undefined;
+    },
+
+    addSearchValue(value) {
+      this.searchValue = value;
+      this.movie = undefined;
     }
   }
 };

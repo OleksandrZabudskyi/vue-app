@@ -28,19 +28,16 @@
 <script>
 import SearchBar from "./SearchBar";
 import MovieDetails from "./MovieDetails";
-import { SEARCH_SUBMITTED } from "../EventBus";
-import { store } from "../store/store";
+import { MOVIE_SELECTED } from "../EventBus";
 
 export default {
   name: "Header",
   components: { movieDetails: MovieDetails, searchBar: SearchBar },
   data: () => ({
-    selectedComponent: "searchBar"
+    selectedComponent: "searchBar",
+    selectedMovie: ""
   }),
   computed: {
-    movie() {
-      return store.data[0];
-    },
     isSearchBar() {
       return this.selectedComponent === "searchBar";
     },
@@ -50,21 +47,21 @@ export default {
     },
     currentProperties() {
       if (this.selectedComponent === "movieDetails") {
-        return { movie: this.movie };
+        return { movie: this.selectedMovie };
       }
       return {};
     }
   },
   created() {
-    this.$bus.$on(SEARCH_SUBMITTED, this.selectMovieBarComponent);
+    this.$bus.$on(MOVIE_SELECTED, this.selectMovieBarComponent);
   },
   methods: {
     selectSearchBarComponent() {
       this.selectedComponent = "searchBar";
     },
     selectMovieBarComponent(value) {
-      if (value && this.movie.producer === value)
-        this.selectedComponent = "movieDetails";
+      this.selectedComponent = "movieDetails";
+      this.selectedMovie = value;
     }
   }
 };

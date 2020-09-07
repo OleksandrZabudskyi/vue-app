@@ -10,4 +10,5 @@ Object.defineProperties(Vue.prototype, {
 });
 
 export const SEARCH_SUBMITTED = "searchSubmitted";
+export const MOVIE_SELECTED = "movieSelected";
 export default EventBus;
