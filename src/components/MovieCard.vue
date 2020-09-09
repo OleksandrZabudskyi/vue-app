@@ -2,7 +2,7 @@
   <div class="movie-card">
     <v-img
       class="movie-card__img"
-      :src="movie.poster"
+      :src="movie.poster_path"
       @click.prevent="selectMovie()"
     ></v-img>
     <div>
@@ -16,13 +16,13 @@
           <v-responsive
             class="text-center v-btn--outlined rounded align-center movie-card__release"
           >
-            <span>{{ movie.releaseYear }}</span>
+            <span>{{ movie.release_date }}</span>
           </v-responsive>
         </v-col>
       </v-row>
     </div>
     <div class="movie-card__subtitle">
-      <p>{{ movie.genre }}</p>
+      <p>{{ convertToString(movie.genres) }}</p>
     </div>
   </div>
 </template>
@@ -41,6 +41,9 @@ export default {
   methods: {
     selectMovie() {
       this.$bus.$emit(MOVIE_SELECTED, this.movie);
+    },
+    convertToString(array) {
+      return array.filter(item => !!item).join(", ");
     }
   }
 };

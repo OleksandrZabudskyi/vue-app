@@ -16,10 +16,10 @@ export const asMovieCard = () => story({
     template: '<movie-card style="background-color: #232323" :movie="movie"/>',
     computed: {
         movie: () => ({
-            poster: "/poster.png",
+            poster_path: "/poster.png",
             title: "Kill Bill",
-            genre: "Oscar Movie",
-            releaseYear: "2020"
+            genres: ["Oscar Movie"],
+            release_date: "2020"
         })
     }
 })

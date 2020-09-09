@@ -48,7 +48,7 @@ export default {
   name: "SearchBar",
   components: { ButtonGroup },
   data: () => ({
-    searchText: "Quentin Tarantino"
+    searchText: ""
   }),
   methods: {
     submitSearch() {

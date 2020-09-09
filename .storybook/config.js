@@ -11,3 +11,10 @@ addDecorator(withTemplate)
 addDecorator(withVuetify)
 
 configure(require.context('./stories', true, /\.stories\.js$/), module)
+
+import Vue from "vue";
+import Vuex from "vuex";
+
+Vue.use(Vuex);
+
+

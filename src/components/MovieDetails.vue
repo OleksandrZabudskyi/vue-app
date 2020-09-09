@@ -2,38 +2,35 @@
   <v-container>
     <v-row class="movie-details">
       <v-col cols="12" sm="6" lg="4">
-        <v-img class="movie-details__img" :src="movie.poster"></v-img>
+        <v-img class="movie-details__img" :src="moviePosterPath"></v-img>
       </v-col>
       <v-col class="movie-details__card" cols="12" sm="6" lg="6">
         <v-row align="center">
-          <v-col>
+          <v-col cols="10">
             <div class="headline movie-details__card__title">
-              <h1>{{ movie.title }}</h1>
+              <h2>{{ movieTitle }}</h2>
             </div>
           </v-col>
-          <v-col>
+          <v-col cols="auto">
             <v-responsive
               class="text-center v-btn--outlined rounded-circle align-center movie-details__card__rating"
             >
               <div class="movie-details__card__rating--green">
-                {{ movie.rating }}
+                {{ movieVoteCount }}
               </div>
             </v-responsive>
           </v-col>
         </v-row>
         <div class="movie-details__card__subtitle">
-          <p>{{ movie.genre }}</p>
+          <p>{{ convertToString(movieGenres) }}</p>
         </div>
         <v-row class="movie-details__card__release">
-          <v-col cols="2">
-            <p>{{ movie.releaseYear }}</p>
-          </v-col>
           <v-col cols="8">
-            <p>{{ movie.duration }}min</p>
+            <p>{{ movieReleaseDate }}</p>
           </v-col>
         </v-row>
         <div class="movie-details__card__description">
-          <p>{{ movie.description }}</p>
+          <p>{{ movieOverview }}</p>
         </div>
       </v-col>
     </v-row>
@@ -41,11 +38,40 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "MovieDetails",
   props: {
     movie: {
       type: Object
+    }
+  },
+  computed: {
+    ...mapGetters("movies", ["getMovieById"]),
+
+    moviePosterPath() {
+      return this.getMovieById(this.movie.id).poster_path;
+    },
+    movieTitle() {
+      return this.getMovieById(this.movie.id).title;
+    },
+    movieVoteCount() {
+      return this.getMovieById(this.movie.id).vote_count;
+    },
+    movieGenres() {
+      return this.getMovieById(this.movie.id).genres;
+    },
+    movieReleaseDate() {
+      return this.getMovieById(this.movie.id).release_date;
+    },
+    movieOverview() {
+      return this.getMovieById(this.movie.id).overview;
+    }
+  },
+  methods: {
+    convertToString: function(array) {
+      return array.filter(item => !!item).join(", ");
     }
   }
 };
