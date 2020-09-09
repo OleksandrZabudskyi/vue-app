@@ -10,10 +10,10 @@ describe("MovieCard", () => {
 
   const props = {
     movie: {
-      poster: "/poster.png",
+      poster_path: "/poster.png",
       title: "Four rooms",
-      genre: "Action and Adventure",
-      releaseYear: 2014
+      genres: ["Action and Adventure"],
+      release_date: 2014
     }
   };
 
@@ -30,26 +30,26 @@ describe("MovieCard", () => {
   });
 
   it("should have movie poster path", () => {
-    const poster = wrapper.vm.movie.poster;
+    const poster = wrapper.vm.movie.poster_path;
 
     expect(poster).toBe("/poster.png");
   });
 
   it("should have movie title ", () => {
-    const title = wrapper.vm.movie.title;
+    const title = wrapper.find(".movie-card__title");
 
-    expect(title).toBe("Four rooms");
+    expect(title.text()).toBe("Four rooms");
   });
 
-  it("should have movie genre ", () => {
-    const genre = wrapper.vm.movie.genre;
+  it("should convert movie genres to string", () => {
+    const subtitle = wrapper.find(".movie-card__subtitle");
 
-    expect(genre).toBe("Action and Adventure");
+    expect(subtitle.text()).toBe("Action and Adventure");
   });
 
   it("should have movie release year ", () => {
-    const releaseYear = wrapper.vm.movie.releaseYear;
+    const releaseYear = wrapper.find(".movie-card__release");
 
-    expect(releaseYear).toBe(2014);
+    expect(releaseYear.text()).toBe("2014");
   });
 });
