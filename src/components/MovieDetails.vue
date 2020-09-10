@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6" lg="4">
         <v-img class="movie-details__img" :src="movie.poster"></v-img>
       </v-col>
-      <v-col cols="12" sm="6" lg="6">
+      <v-col class="movie-details__card" cols="12" sm="6" lg="6">
         <v-row align="center">
           <v-col>
             <div class="headline movie-details__card__title">
@@ -52,10 +52,6 @@ export default {
 </script>
 
 <style>
-.movie-details {
-  background: #232323;
-}
-
 .movie-details__img {
   height: 500px;
 }

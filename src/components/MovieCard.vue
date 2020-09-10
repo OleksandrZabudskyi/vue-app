@@ -1,6 +1,10 @@
 <template>
   <div class="movie-card">
-    <v-img class="movie-card__img" :src="movie.poster"></v-img>
+    <v-img
+      class="movie-card__img"
+      :src="movie.poster"
+      @click.prevent="selectMovie()"
+    ></v-img>
     <div>
       <v-row align="center" justify="space-between">
         <v-col cols="8">
@@ -24,12 +28,19 @@
 </template>
 
 <script>
+import { MOVIE_SELECTED } from "../EventBus";
+
 export default {
   name: "MovieCard",
   props: {
     movie: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    selectMovie() {
+      this.$bus.$emit(MOVIE_SELECTED, this.movie);
     }
   }
 };

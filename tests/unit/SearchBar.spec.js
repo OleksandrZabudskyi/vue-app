@@ -35,7 +35,7 @@ describe("SearchBar", () => {
   });
 
   it("should show filter text in SearchBar ", () => {
-    const filter = wrapper.find(".search-bar__filter");
+    const filter = wrapper.find(".search-bar__buttons--filter");
 
     expect(filter.text()).toBe("SEARCH BY");
   });

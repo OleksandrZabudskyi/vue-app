@@ -17,27 +17,42 @@
           </v-text-field>
         </v-col>
         <v-col cols="2">
-          <v-btn class="search-bar__button" text x-large :click="submit">
+          <v-btn
+            class="search-bar__button"
+            text
+            x-large
+            @click="submitSearch()"
+          >
             SEARCH
           </v-btn>
         </v-col>
       </v-row>
     </v-form>
-    <div class="search-bar__filter">
-      <p>SEARCH BY</p>
-    </div>
+    <v-row no-gutters class="search-bar__buttons" align="center">
+      <div class="search-bar__buttons--filter">
+        SEARCH BY
+      </div>
+      <button-group
+        left-button-name="TITLE"
+        right-button-name="GENRE"
+      ></button-group>
+    </v-row>
   </v-container>
 </template>
 
 <script>
+import ButtonGroup from "./ButtonGroup";
+import { SEARCH_SUBMITTED } from "../EventBus";
+
 export default {
   name: "SearchBar",
+  components: { ButtonGroup },
   data: () => ({
-    searchText: "Search"
+    searchText: "Quentin Tarantino"
   }),
   methods: {
-    submit() {
-      this.$emit("submitted", this.searchText);
+    submitSearch() {
+      this.$bus.$emit(SEARCH_SUBMITTED, this.searchText);
     }
   }
 };
@@ -45,9 +60,7 @@ export default {
 
 <style scoped>
 .search-bar {
-  background-color: #232323;
   color: white;
-  opacity: 0.8;
 }
 
 .search-bar__header {
@@ -56,9 +69,10 @@ export default {
   font-size: 15px;
 }
 
-.search-bar__filter {
+.search-bar__buttons--filter {
   padding-left: 20px;
-  font-size: 20px;
+  font-size: 0.875rem;
+  padding-right: 10px;
 }
 
 .search-bar__input {

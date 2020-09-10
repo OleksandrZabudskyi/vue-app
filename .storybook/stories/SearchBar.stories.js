@@ -13,5 +13,5 @@ export default {
 
 export const asSearchBar = () => story({
     components: {SearchBar},
-    template: '<search-bar class="dark"/>'
+    template: '<search-bar style="background-color: #232323"/>'
 })
