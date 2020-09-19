@@ -33,7 +33,7 @@
       "Action",
       "Adventure"
     ],
-    "runtime": null
+    "runtime": 120
   },
   {
     "id": 299534,
@@ -51,7 +51,7 @@
       "Adventure",
       "Science Fiction"
     ],
-    "runtime": null
+    "runtime": 120
   },
   {
     "id": 287947,
@@ -70,7 +70,7 @@
       "Fantasy",
       "Science Fiction"
     ],
-    "runtime": null
+    "runtime": 120
   },
   {
     "id": 320288,
@@ -87,7 +87,7 @@
       "Action",
       "Science Fiction"
     ],
-    "runtime": null
+    "runtime": 120
   },
   {
     "id": 181790,
@@ -106,7 +106,7 @@
       "Fantasy",
       "Science Fiction"
     ],
-    "runtime": null
+    "runtime": 120
   },
   {
     "id": 297802,
@@ -124,7 +124,7 @@
       "Fantasy",
       "Science Fiction"
     ],
-    "runtime": null
+    "runtime": 120
   },
   {
     "id": 353081,
@@ -142,7 +142,7 @@
       "Action",
       "Thriller"
     ],
-    "runtime": null
+    "runtime": 140
   },
   {
     "id": 351286,
@@ -162,7 +162,7 @@
       "Science Fiction",
       "Thriller"
     ],
-    "runtime": null
+    "runtime": 140
   },
   {
     "id": 348350,

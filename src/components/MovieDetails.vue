@@ -25,8 +25,11 @@
           <p>{{ convertToString(movieGenres) }}</p>
         </div>
         <v-row class="movie-details__card__release">
-          <v-col cols="8">
+          <v-col cols="4">
             <p>{{ movieReleaseDate }}</p>
+          </v-col>
+          <v-col cols="8">
+            <p>{{ movieDuration ? movieDuration + " min" : "0 min" }}</p>
           </v-col>
         </v-row>
         <div class="movie-details__card__description">
@@ -64,6 +67,9 @@ export default {
     },
     movieReleaseDate() {
       return this.getMovieById(this.movie.id).release_date;
+    },
+    movieDuration() {
+      return this.getMovieById(this.movie.id).runtime;
     },
     movieOverview() {
       return this.getMovieById(this.movie.id).overview;
