@@ -22,14 +22,14 @@
           </v-col>
         </v-row>
         <div class="movie-details__card__subtitle">
-          <p>{{ convertToString(movieGenres) }}</p>
+          <p>{{ movieGenres | convertToString }}</p>
         </div>
         <v-row class="movie-details__card__release">
           <v-col cols="4">
             <p>{{ movieReleaseDate }}</p>
           </v-col>
           <v-col cols="8">
-            <p>{{ movieDuration ? movieDuration + " min" : "0 min" }}</p>
+            <p>{{ movieDuration | formatDuration }}</p>
           </v-col>
         </v-row>
         <div class="movie-details__card__description">
@@ -42,6 +42,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { formatDuration } from "../filters/formatDuration";
 
 export default {
   name: "MovieDetails",
@@ -75,10 +76,8 @@ export default {
       return this.getMovieById(this.movie.id).overview;
     }
   },
-  methods: {
-    convertToString: function(array) {
-      return array.filter(item => !!item).join(", ");
-    }
+  filters: {
+    formatDuration
   }
 };
 </script>

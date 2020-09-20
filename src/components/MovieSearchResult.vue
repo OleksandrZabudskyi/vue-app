@@ -6,7 +6,7 @@
           {{ movies.length }} movie found
         </template>
         <template v-if="selectedMovie">
-          Films by {{ convertToString(selectedMovie.genres) }} genre</template
+          Films by {{ selectedMovie.genres | convertToString }} genre</template
         >
       </v-col>
       <v-col cols="4" sm="6" lg="4">
@@ -88,9 +88,6 @@ export default {
       this.searchValue = value;
       this.selectedMovie = "";
       this.$store.dispatch("movies/search", value);
-    },
-    convertToString(array) {
-      return array.filter(item => !!item).join(", ");
     },
     cleanResult() {
       this.searchValue = "";
