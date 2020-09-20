@@ -6,6 +6,7 @@ import Vuex from "vuex";
 const localVue = createLocalVue();
 localVue.use(Vuetify);
 localVue.use(Vuex);
+localVue.filter("convertToString", () => "Action and Adventure");
 
 describe("MovieDetails", () => {
   let wrapper;

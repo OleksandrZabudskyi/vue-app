@@ -14,6 +14,9 @@ configure(require.context('./stories', true, /\.stories\.js$/), module)
 
 import Vue from "vue";
 import Vuex from "vuex";
+import { install } from "../src/plugins/plugin";
+
+Vue.use(install);
 
 Vue.use(Vuex);
 
