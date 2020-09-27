@@ -46,6 +46,7 @@ export default {
   methods: {
     selectMovie() {
       this.$bus.$emit(MOVIE_SELECTED, this.movie);
+      this.$store.dispatch("movies/searchMovieById", this.movie.id);
     },
     addUrlPath(event) {
       this.urlPath = event.detail;
