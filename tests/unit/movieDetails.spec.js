@@ -27,19 +27,14 @@ describe("MovieDetails", () => {
           movies: {
             namespaced: true,
             state: {
-              movies: []
-            },
-            getters: {
-              getMovieById: () => () => {
-                return {
-                  id: 12345,
-                  poster_path: "/poster.png",
-                  title: "Four rooms",
-                  genres: ["Action and Adventure"],
-                  vote_count: 4.3,
-                  release_date: 2014,
-                  overview: "This movie features"
-                };
+              movies: [],
+              selectedMovie: {
+                poster_path: "/poster.png",
+                title: "Four rooms",
+                genres: ["Action and Adventure"],
+                release_date: 2014,
+                vote_average: 4.3,
+                overview: "This movie features"
               }
             }
           }
