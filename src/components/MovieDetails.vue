@@ -2,13 +2,16 @@
   <v-container>
     <v-row class="movie-details">
       <v-col cols="12" sm="6" lg="4">
-        <v-img class="movie-details__img" :src="moviePosterPath"></v-img>
+        <v-img
+          class="movie-details__img"
+          :src="selectedMovie.poster_path"
+        ></v-img>
       </v-col>
       <v-col class="movie-details__card" cols="12" sm="6" lg="6">
         <v-row align="center">
           <v-col cols="10">
             <div class="headline movie-details__card__title">
-              <h2>{{ movieTitle }}</h2>
+              <h2>{{ selectedMovie.title }}</h2>
             </div>
           </v-col>
           <v-col cols="auto">
@@ -16,24 +19,24 @@
               class="text-center v-btn--outlined rounded-circle align-center movie-details__card__rating"
             >
               <div class="movie-details__card__rating--green">
-                {{ movieVoteCount }}
+                {{ selectedMovie.vote_average }}
               </div>
             </v-responsive>
           </v-col>
         </v-row>
         <div class="movie-details__card__subtitle">
-          <p>{{ convertToString(movieGenres) }}</p>
+          <p>{{ selectedMovie.genres | convertToString }}</p>
         </div>
         <v-row class="movie-details__card__release">
           <v-col cols="4">
-            <p>{{ movieReleaseDate }}</p>
+            <p>{{ selectedMovie.release_date }}</p>
           </v-col>
           <v-col cols="8">
-            <p>{{ movieDuration ? movieDuration + " min" : "0 min" }}</p>
+            <p>{{ selectedMovie.runtime | formatDuration }}</p>
           </v-col>
         </v-row>
         <div class="movie-details__card__description">
-          <p>{{ movieOverview }}</p>
+          <p>{{ selectedMovie.overview }}</p>
         </div>
       </v-col>
     </v-row>
@@ -41,7 +44,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
+import { formatDuration } from "../filters/formatDuration";
 
 export default {
   name: "MovieDetails",
@@ -51,34 +55,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("movies", ["getMovieById"]),
-
-    moviePosterPath() {
-      return this.getMovieById(this.movie.id).poster_path;
-    },
-    movieTitle() {
-      return this.getMovieById(this.movie.id).title;
-    },
-    movieVoteCount() {
-      return this.getMovieById(this.movie.id).vote_count;
-    },
-    movieGenres() {
-      return this.getMovieById(this.movie.id).genres;
-    },
-    movieReleaseDate() {
-      return this.getMovieById(this.movie.id).release_date;
-    },
-    movieDuration() {
-      return this.getMovieById(this.movie.id).runtime;
-    },
-    movieOverview() {
-      return this.getMovieById(this.movie.id).overview;
-    }
+    ...mapState("movies", ["selectedMovie"])
   },
-  methods: {
-    convertToString: function(array) {
-      return array.filter(item => !!item).join(", ");
-    }
+  filters: {
+    formatDuration
   }
 };
 </script>

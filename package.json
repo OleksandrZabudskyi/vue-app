@@ -16,6 +16,7 @@
     "serve:storybook": "start-storybook -s ./public -p 6006"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.12",
     "vuetify": "^2.2.11",

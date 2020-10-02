@@ -18,12 +18,21 @@ export const asMovieDetails = () => story({
     template: '<movie-details style="background-color: #232323" :movie="movie"/>',
     store: new Vuex.Store({
         modules: {
-            movies
+            movies: {
+                namespaced: true,
+                state: {
+                    movies: [],
+                    selectedMovie: {
+                        poster_path: "/poster.png",
+                        title: "Four rooms",
+                        genres: ["Action and Adventure"],
+                        release_date: 2014,
+                        vote_average: 4.3,
+                        overview: "This movie features",
+                        runtime: 120
+                    }
+                }
+            }
         }
-    }),
-    computed: {
-        movie: () => ({
-            id: 447365
-        })
-    }
+    })
 })

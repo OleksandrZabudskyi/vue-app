@@ -1,4 +1,4 @@
-import { mount, createLocalVue } from "@vue/test-utils";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
 import Header from "../../src/components/Header.vue";
 import Vuetify from "../../src/plugins/vuetify";
 
@@ -9,7 +9,7 @@ describe("Header", () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = mount(Header, {
+    wrapper = shallowMount(Header, {
       localVue: localVue,
       vuetify: Vuetify
     });

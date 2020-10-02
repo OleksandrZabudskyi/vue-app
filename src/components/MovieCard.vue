@@ -2,7 +2,9 @@
   <div class="movie-card">
     <v-img
       class="movie-card__img"
-      :src="movie.poster_path"
+      :src="urlPath"
+      v-isInViewPort="movie.poster_path"
+      @intersects="addUrlPath($event)"
       @click.prevent="selectMovie()"
     ></v-img>
     <div>
@@ -22,7 +24,7 @@
       </v-row>
     </div>
     <div class="movie-card__subtitle">
-      <p>{{ convertToString(movie.genres) }}</p>
+      <p>{{ movie.genres | convertToString }}</p>
     </div>
   </div>
 </template>
@@ -38,12 +40,16 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    urlPath: ""
+  }),
   methods: {
     selectMovie() {
       this.$bus.$emit(MOVIE_SELECTED, this.movie);
+      this.$store.dispatch("movies/searchMovieById", this.movie.id);
     },
-    convertToString(array) {
-      return array.filter(item => !!item).join(", ");
+    addUrlPath(event) {
+      this.urlPath = event.detail;
     }
   }
 };

@@ -1,36 +1,13 @@
-import data from "../../assets/movies.json";
+import ApiService from "../../core/api";
 
 export default {
   namespaced: true,
 
   state: {
-    initMovies: data,
-    movies: data,
+    movies: [],
     searchCriteria: "TITLE",
-    sortCriteria: "RELEASE DATE"
-  },
-  getters: {
-    getMovieById: state => id => {
-      return state.initMovies.find(movie => movie.id === id);
-    },
-    searchMoviesByTitleOrOverview: state => value => {
-      let caseInsensitiveValue = value.toLowerCase();
-      let result = [];
-
-      if (value) {
-        result = state.initMovies.filter(
-          movie =>
-            movie.title.toLowerCase().includes(caseInsensitiveValue) ||
-            movie.overview.toLowerCase().includes(caseInsensitiveValue)
-        );
-      }
-      return result;
-    },
-    searchMoviesByGenre: state => value => {
-      return state.initMovies.filter(movie =>
-        movie.genres.some(genre => value.includes(genre))
-      );
-    }
+    sortCriteria: "RELEASE DATE",
+    selectedMovie: ""
   },
   mutations: {
     saveSearchCriteria(state, value) {
@@ -41,26 +18,37 @@ export default {
     },
     updateMovies(state, movies) {
       state.movies = movies;
+    },
+    selectMovie(state, movie) {
+      state.selectedMovie = movie;
     }
   },
   actions: {
+    populateMovies({ commit }) {
+      return ApiService.getMovies({
+        sortBy: this.state.sortCriteria === "GENRE" ? "genre" : "release_date",
+        sortOrder: "desc"
+      }).then(movies => commit("updateMovies", movies.data));
+    },
     search(context, value) {
-      if (context.state.searchCriteria === "GENRE") {
-        context.commit(
-          "updateMovies",
-          context.getters.searchMoviesByGenre(value)
-        );
-      } else {
-        context.commit(
-          "updateMovies",
-          context.getters.searchMoviesByTitleOrOverview(value)
-        );
-      }
+      return ApiService.getMovies({
+        searchBy: context.state.searchCriteria === "GENRE" ? "genres" : "title",
+        search: value,
+        sortBy: this.state.sortCriteria === "GENRE" ? "genre" : "release_date",
+        sortOrder: "desc"
+      }).then(movies => context.commit("updateMovies", movies.data));
     },
     searchByGenres(context, value) {
-      context.commit(
-        "updateMovies",
-        context.getters.searchMoviesByGenre(value)
+      return ApiService.getMovies({
+        searchBy: "genres",
+        search: value,
+        sortBy: this.state.sortCriteria === "GENRE" ? "genre" : "release_date",
+        sortOrder: "desc"
+      }).then(movies => context.commit("updateMovies", movies.data));
+    },
+    searchMovieById(context, id) {
+      return ApiService.getMoviesById(id).then(movie =>
+        context.commit("selectMovie", movie.data)
       );
     }
   }

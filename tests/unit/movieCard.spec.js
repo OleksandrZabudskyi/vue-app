@@ -4,6 +4,8 @@ import Vuetify from "../../src/plugins/vuetify";
 
 const localVue = createLocalVue();
 localVue.use(Vuetify);
+localVue.filter("convertToString", () => "Action and Adventure");
+localVue.directive("isInViewPort", data => data);
 
 describe("MovieCard", () => {
   let wrapper;
