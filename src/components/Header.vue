@@ -28,7 +28,7 @@
 <script>
 import SearchBar from "./SearchBar";
 import MovieDetails from "./MovieDetails";
-import { MOVIE_SELECTED } from "../EventBus";
+import { MOVIE_SELECTED, HOME_PAGE_APPLIED } from "../EventBus";
 
 export default {
   name: "Header",
@@ -41,7 +41,6 @@ export default {
     isSearchBar() {
       return this.selectedComponent === "searchBar";
     },
-
     isMovieDetails() {
       return this.selectedComponent === "movieDetails";
     },
@@ -58,6 +57,7 @@ export default {
   methods: {
     selectSearchBarComponent() {
       this.selectedComponent = "searchBar";
+      this.$bus.$emit(HOME_PAGE_APPLIED);
     },
     selectMovieBarComponent(value) {
       this.selectedComponent = "movieDetails";

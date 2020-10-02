@@ -4,11 +4,12 @@
       v-model="selectedButtonValue"
       background-color="grey darken-1"
       mandatory
+      :change="saveToggleValue()"
     >
-      <v-btn :click="submit()" color="white" text>
+      <v-btn color="white" text :value="leftButtonName">
         <span>{{ leftButtonName }}</span>
       </v-btn>
-      <v-btn :click="submit()" color="white" text>
+      <v-btn color="white" text :value="rightButtonName">
         <span>{{ rightButtonName }}</span>
       </v-btn>
     </v-btn-toggle>
@@ -18,6 +19,10 @@
 export default {
   name: "ButtonGroup",
   props: {
+    groupName: {
+      type: String,
+      required: true
+    },
     leftButtonName: {
       type: String,
       required: true,
@@ -30,11 +35,19 @@ export default {
     }
   },
   data: () => ({
-    selectedButtonValue: 0
+    selectedButtonValue: ""
   }),
   methods: {
-    submit() {
-      this.$emit("submitted", this.selectedButtonValue);
+    saveToggleValue() {
+      if (this.groupName === "search") {
+        this.$store.commit(
+          "movies/saveSearchCriteria",
+          this.selectedButtonValue
+        );
+      }
+      if (this.groupName === "sort") {
+        this.$store.commit("movies/saveSortCriteria", this.selectedButtonValue);
+      }
     }
   }
 };

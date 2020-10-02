@@ -2,7 +2,9 @@
   <div class="movie-card">
     <v-img
       class="movie-card__img"
-      :src="movie.poster"
+      :src="urlPath"
+      v-isInViewPort="movie.poster_path"
+      @intersects="addUrlPath($event)"
       @click.prevent="selectMovie()"
     ></v-img>
     <div>
@@ -16,13 +18,13 @@
           <v-responsive
             class="text-center v-btn--outlined rounded align-center movie-card__release"
           >
-            <span>{{ movie.releaseYear }}</span>
+            <span>{{ movie.release_date }}</span>
           </v-responsive>
         </v-col>
       </v-row>
     </div>
     <div class="movie-card__subtitle">
-      <p>{{ movie.genre }}</p>
+      <p>{{ movie.genres | convertToString }}</p>
     </div>
   </div>
 </template>
@@ -38,9 +40,16 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    urlPath: ""
+  }),
   methods: {
     selectMovie() {
       this.$bus.$emit(MOVIE_SELECTED, this.movie);
+      this.$store.dispatch("movies/searchMovieById", this.movie.id);
+    },
+    addUrlPath(event) {
+      this.urlPath = event.detail;
     }
   }
 };

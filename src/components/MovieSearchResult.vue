@@ -2,10 +2,12 @@
   <v-row>
     <v-row class="result-bar" align="center" justify="space-around">
       <v-col cols="8" sm="6" lg="4">
-        <template v-if="movies.length && !movie">
+        <template v-if="movies.length && !selectedMovie && searchValue">
           {{ movies.length }} movie found
         </template>
-        <template v-if="movie"> Films by {{ movie.genre }} genre</template>
+        <template v-if="selectedMovie">
+          Films by {{ selectedMovie.genres | convertToString }} genre</template
+        >
       </v-col>
       <v-col cols="4" sm="6" lg="4">
         <v-row align="center">
@@ -13,6 +15,7 @@
             SORT BY
           </div>
           <button-group
+            groupName="sort"
             left-button-name="RELEASE DATE"
             right-button-name="RATING"
           ></button-group>
@@ -21,7 +24,13 @@
     </v-row>
     <v-row align="center" justify="center" class="card-list">
       <template v-if="movies.length">
-        <v-col v-for="movie in movies" :key="movie.id" cols="12" sm="6" lg="4">
+        <v-col
+          v-for="movie in sortMovies(movies)"
+          :key="movie.id"
+          cols="12"
+          sm="6"
+          lg="4"
+        >
           <movie-card :movie="movie"></movie-card>
         </v-col>
       </template>
@@ -37,39 +46,53 @@
 <script>
 import MovieCard from "./MovieCard";
 import ButtonGroup from "./ButtonGroup";
-import { MOVIE_SELECTED, SEARCH_SUBMITTED } from "../EventBus";
-import { store } from "../store/store";
+import {
+  MOVIE_SELECTED,
+  SEARCH_SUBMITTED,
+  HOME_PAGE_APPLIED
+} from "../EventBus";
+import { mapState } from "vuex";
 
 export default {
   name: "MovieSearchResult",
   components: { ButtonGroup, MovieCard },
 
   data: () => ({
-    searchValue: undefined,
-    movie: undefined
+    searchValue: "",
+    selectedMovie: ""
   }),
   computed: {
-
-    movies() {
-      if(this.searchValue !== undefined) {
-        return store.data.filter(m => m.producer === this.searchValue);
-      }
-      return store.data;
-    }
+    ...mapState("movies", ["movies", "searchCriteria", "sortCriteria"])
   },
   created() {
     this.$bus.$on(MOVIE_SELECTED, this.addSelectedMovie);
     this.$bus.$on(SEARCH_SUBMITTED, this.addSearchValue);
+    this.$bus.$on(HOME_PAGE_APPLIED, this.cleanResult);
+    this.$store.dispatch("movies/populateMovies");
   },
   methods: {
+    sortMovies(movies) {
+      if (this.sortCriteria === "RATING") {
+        return movies.slice().sort((a, b) => b.vote_count - a.vote_count);
+      } else if (this.sortCriteria === "RELEASE DATE") {
+        return movies.slice().sort((a, b) => b.release_date - a.release_date);
+      }
+    },
+
     addSelectedMovie(value) {
-      this.movie = value;
-      this.searchValue = undefined;
+      this.selectedMovie = value;
+      this.searchValue = "";
+      this.$store.dispatch("movies/searchByGenres", this.selectedMovie.genres);
     },
 
     addSearchValue(value) {
       this.searchValue = value;
-      this.movie = undefined;
+      this.selectedMovie = "";
+      this.$store.dispatch("movies/search", value);
+    },
+    cleanResult() {
+      this.searchValue = "";
+      this.selectedMovie = "";
     }
   }
 };
