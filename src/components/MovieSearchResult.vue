@@ -68,6 +68,7 @@ export default {
     this.$bus.$on(MOVIE_SELECTED, this.addSelectedMovie);
     this.$bus.$on(SEARCH_SUBMITTED, this.addSearchValue);
     this.$bus.$on(HOME_PAGE_APPLIED, this.cleanResult);
+    this.$store.dispatch("movies/populateMovies");
   },
   methods: {
     sortMovies(movies) {
