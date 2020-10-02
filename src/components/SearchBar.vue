@@ -33,6 +33,7 @@
         SEARCH BY
       </div>
       <button-group
+        groupName="search"
         left-button-name="TITLE"
         right-button-name="GENRE"
       ></button-group>
