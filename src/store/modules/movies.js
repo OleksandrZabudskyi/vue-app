@@ -24,25 +24,19 @@ export default {
     }
   },
   actions: {
-    populateMovies({ commit }) {
-      return ApiService.getMovies({
-        sortBy: this.state.sortCriteria === "GENRE" ? "genre" : "release_date",
-        sortOrder: "desc"
-      }).then(movies => commit("updateMovies", movies.data));
-    },
-    search(context, value) {
-      return ApiService.getMovies({
-        searchBy: context.state.searchCriteria === "GENRE" ? "genres" : "title",
-        search: value,
-        sortBy: this.state.sortCriteria === "GENRE" ? "genre" : "release_date",
-        sortOrder: "desc"
-      }).then(movies => context.commit("updateMovies", movies.data));
+    search(context, query) {
+      return ApiService.getMovies(query).then(movies =>
+        context.commit("updateMovies", movies.data)
+      );
     },
     searchByGenres(context, value) {
       return ApiService.getMovies({
         searchBy: "genres",
-        search: value,
-        sortBy: this.state.sortCriteria === "GENRE" ? "genre" : "release_date",
+        search: value[0],
+        sortBy:
+          this.state.sortCriteria === "RATING"
+            ? "vote_average"
+            : "release_date",
         sortOrder: "desc"
       }).then(movies => context.commit("updateMovies", movies.data));
     },
