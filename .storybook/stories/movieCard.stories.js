@@ -19,7 +19,7 @@ export const asMovieCard = () => story({
             poster_path: "/poster.png",
             title: "Kill Bill",
             genres: ["Oscar Movie"],
-            release_date: "2020"
+            release_date: "2020-10-20"
         })
     }
 })

@@ -68,14 +68,16 @@ export default {
     this.$bus.$on(MOVIE_SELECTED, this.addSelectedMovie);
     this.$bus.$on(SEARCH_SUBMITTED, this.addSearchValue);
     this.$bus.$on(HOME_PAGE_APPLIED, this.cleanResult);
-    this.$store.dispatch("movies/populateMovies");
+    this.$store.dispatch("movies/search", this.createSearchQuery(""));
   },
   methods: {
     sortMovies(movies) {
       if (this.sortCriteria === "RATING") {
-        return movies.slice().sort((a, b) => b.vote_count - a.vote_count);
+        return movies.slice().sort((a, b) => b.vote_average - a.vote_average);
       } else if (this.sortCriteria === "RELEASE DATE") {
-        return movies.slice().sort((a, b) => b.release_date - a.release_date);
+        return movies
+          .slice()
+          .sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
       }
     },
 
@@ -88,7 +90,24 @@ export default {
     addSearchValue(value) {
       this.searchValue = value;
       this.selectedMovie = "";
-      this.$store.dispatch("movies/search", value);
+      this.searchMovie(value);
+    },
+    searchMovie(value) {
+      let searchQuery = this.createSearchQuery(value);
+      this.$store.dispatch("movies/search", searchQuery);
+      this.$router.push({
+        name: "movies",
+        query: searchQuery
+      });
+    },
+    createSearchQuery(searchValue) {
+      return {
+        searchBy: this.searchCriteria === "GENRE" ? "genres" : "title",
+        search: searchValue,
+        sortBy:
+          this.sortCriteria === "RATING" ? "vote_average" : "release_date",
+        sortOrder: "desc"
+      };
     },
     cleanResult() {
       this.searchValue = "";

@@ -29,7 +29,7 @@
         </div>
         <v-row class="movie-details__card__release">
           <v-col cols="4">
-            <p>{{ selectedMovie.release_date }}</p>
+            <p>{{ selectedMovie.release_date | formatDateToYear }}</p>
           </v-col>
           <v-col cols="8">
             <p>{{ selectedMovie.runtime | formatDuration }}</p>
@@ -46,6 +46,7 @@
 <script>
 import { mapState } from "vuex";
 import { formatDuration } from "../filters/formatDuration";
+import { formatDateToYear } from "../filters/formatDateToYear";
 
 export default {
   name: "MovieDetails",
@@ -57,8 +58,12 @@ export default {
   computed: {
     ...mapState("movies", ["selectedMovie"])
   },
+  created() {
+    this.$store.dispatch("movies/searchMovieById", this.$route.params.id);
+  },
   filters: {
-    formatDuration
+    formatDuration,
+    formatDateToYear
   }
 };
 </script>

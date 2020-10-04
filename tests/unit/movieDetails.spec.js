@@ -2,10 +2,13 @@ import { shallowMount, createLocalVue } from "@vue/test-utils";
 import MovieDetails from "../../src/components/MovieDetails.vue";
 import Vuetify from "../../src/plugins/vuetify";
 import Vuex from "vuex";
+import VueRouter from "vue-router";
+import Details from "@/views/Details";
 
 const localVue = createLocalVue();
 localVue.use(Vuetify);
 localVue.use(Vuex);
+localVue.use(VueRouter);
 localVue.filter("convertToString", () => "Action and Adventure");
 
 describe("MovieDetails", () => {
@@ -17,8 +20,13 @@ describe("MovieDetails", () => {
     }
   };
 
+  const router = new VueRouter({
+    routes: [{ path: "/movies/:id", name: "details", component: Details }]
+  });
+
   beforeEach(() => {
     wrapper = shallowMount(MovieDetails, {
+      router: router,
       localVue: localVue,
       vuetify: Vuetify,
       propsData: props,
@@ -32,7 +40,7 @@ describe("MovieDetails", () => {
                 poster_path: "/poster.png",
                 title: "Four rooms",
                 genres: ["Action and Adventure"],
-                release_date: 2014,
+                release_date: "2014-10-20",
                 vote_average: 4.3,
                 overview: "This movie features"
               }

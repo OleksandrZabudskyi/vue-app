@@ -1,12 +1,14 @@
 <template>
   <div class="movie-card">
-    <v-img
-      class="movie-card__img"
-      :src="urlPath"
-      v-isInViewPort="movie.poster_path"
-      @intersects="addUrlPath($event)"
-      @click.prevent="selectMovie()"
-    ></v-img>
+    <router-link :to="`/movies/${movie.id}`">
+      <v-img
+        class="movie-card__img"
+        :src="urlPath"
+        v-isInViewPort="movie.poster_path"
+        @intersects="addUrlPath($event)"
+        @click.prevent="selectMovie()"
+      ></v-img>
+    </router-link>
     <div>
       <v-row align="center" justify="space-between">
         <v-col cols="8">
@@ -45,6 +47,7 @@ export default {
   }),
   methods: {
     selectMovie() {
+      this.$router.push("/movies/" + this.movie.id);
       this.$bus.$emit(MOVIE_SELECTED, this.movie);
       this.$store.dispatch("movies/searchMovieById", this.movie.id);
     },
