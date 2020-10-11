@@ -16,7 +16,13 @@ describe("MovieDetails", () => {
 
   const props = {
     movie: {
-      id: 12345
+      id: 12345,
+      poster_path: "/poster.png",
+      title: "Four rooms",
+      genres: ["Action and Adventure"],
+      release_date: "2014-10-20",
+      vote_average: 4.3,
+      overview: "This movie features"
     }
   };
 
@@ -35,15 +41,7 @@ describe("MovieDetails", () => {
           movies: {
             namespaced: true,
             state: {
-              movies: [],
-              selectedMovie: {
-                poster_path: "/poster.png",
-                title: "Four rooms",
-                genres: ["Action and Adventure"],
-                release_date: "2014-10-20",
-                vote_average: 4.3,
-                overview: "This movie features"
-              }
+              movies: []
             }
           }
         }

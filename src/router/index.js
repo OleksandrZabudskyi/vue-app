@@ -13,7 +13,7 @@ const routes = [
     component: Home
   },
   {
-    path: "/movies/:id",
+    path: "/movies/:id(\\d+)",
     name: "details",
     component: Details
   },
@@ -21,11 +21,6 @@ const routes = [
     path: "*",
     name: "default",
     component: NotFound
-  },
-  {
-    path: "/movies",
-    name: "movies",
-    component: Home
   }
 ];
 
