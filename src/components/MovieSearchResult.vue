@@ -6,7 +6,7 @@
           {{ movies.length }} movie found
         </template>
         <template v-if="selectedMovie">
-          Films by {{ selectedMovie.genres | convertToString }} genre</template
+          Films by {{ selectedMovie.genres[0] }} genre</template
         >
       </v-col>
       <v-col cols="4" sm="6" lg="4">
@@ -23,7 +23,12 @@
       </v-col>
     </v-row>
     <v-row align="center" justify="center" class="card-list">
-      <template v-if="movies.length">
+      <div class="spinner"></div>
+
+      <template v-if="isLoading">
+        <progress-bar entityName="movies"></progress-bar>
+      </template>
+      <template v-else-if="movies.length">
         <v-col
           v-for="movie in sortMovies(movies)"
           :key="movie.id"
@@ -46,29 +51,33 @@
 <script>
 import MovieCard from "./MovieCard";
 import ButtonGroup from "./ButtonGroup";
-import {
-  MOVIE_SELECTED,
-  SEARCH_SUBMITTED,
-  HOME_PAGE_APPLIED
-} from "../EventBus";
 import { mapState } from "vuex";
+import ProgressBar from "../components/ProgressBar";
+import { SEARCH_SUBMITTED, HOME_PAGE_APPLIED } from "../EventBus";
 
 export default {
   name: "MovieSearchResult",
-  components: { ButtonGroup, MovieCard },
-
+  components: { ProgressBar, ButtonGroup, MovieCard },
+  props: {
+    selectedMovie: {
+      type: Object,
+      default: null
+    }
+  },
   data: () => ({
-    searchValue: "",
-    selectedMovie: ""
+    searchValue: ""
   }),
   computed: {
-    ...mapState("movies", ["movies", "searchCriteria", "sortCriteria"])
+    ...mapState("movies", [
+      "movies",
+      "searchCriteria",
+      "sortCriteria",
+      "isLoading"
+    ])
   },
   created() {
-    this.$bus.$on(MOVIE_SELECTED, this.addSelectedMovie);
     this.$bus.$on(SEARCH_SUBMITTED, this.addSearchValue);
     this.$bus.$on(HOME_PAGE_APPLIED, this.cleanResult);
-    this.$store.dispatch("movies/search", this.createSearchQuery(""));
   },
   methods: {
     sortMovies(movies) {
@@ -81,33 +90,9 @@ export default {
       }
     },
 
-    addSelectedMovie(value) {
-      this.selectedMovie = value;
-      this.searchValue = "";
-      this.$store.dispatch("movies/searchByGenres", this.selectedMovie.genres);
-    },
-
     addSearchValue(value) {
       this.searchValue = value;
       this.selectedMovie = "";
-      this.searchMovie(value);
-    },
-    searchMovie(value) {
-      let searchQuery = this.createSearchQuery(value);
-      this.$store.dispatch("movies/search", searchQuery);
-      this.$router.push({
-        name: "movies",
-        query: searchQuery
-      });
-    },
-    createSearchQuery(searchValue) {
-      return {
-        searchBy: this.searchCriteria === "GENRE" ? "genres" : "title",
-        search: searchValue,
-        sortBy:
-          this.sortCriteria === "RATING" ? "vote_average" : "release_date",
-        sortOrder: "desc"
-      };
     },
     cleanResult() {
       this.searchValue = "";
@@ -117,7 +102,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .result-bar {
   background-color: #555555;
   width: 100%;

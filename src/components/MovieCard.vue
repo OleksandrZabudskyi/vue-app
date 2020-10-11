@@ -7,6 +7,7 @@
         v-isInViewPort="movie.poster_path"
         @intersects="addUrlPath($event)"
         @click.prevent="selectMovie()"
+        @click.native="scrollToTop()"
       ></v-img>
     </router-link>
     <div>
@@ -33,6 +34,7 @@
 
 <script>
 import { MOVIE_SELECTED } from "../EventBus";
+import { mapState } from "vuex";
 
 export default {
   name: "MovieCard",
@@ -45,14 +47,32 @@ export default {
   data: () => ({
     urlPath: ""
   }),
+  computed: {
+    ...mapState("movies", ["movies"])
+  },
   methods: {
     selectMovie() {
-      this.$router.push("/movies/" + this.movie.id);
       this.$bus.$emit(MOVIE_SELECTED, this.movie);
-      this.$store.dispatch("movies/searchMovieById", this.movie.id);
+      this.$router.push({ path: `/movies/${this.movie.id}` });
+      this.$store.dispatch(
+        "movies/search",
+        this.createSearchQuery(this.movie.genres[0])
+      );
     },
     addUrlPath(event) {
       this.urlPath = event.detail;
+    },
+    scrollToTop() {
+      window.scrollTo(0, 0);
+    },
+    createSearchQuery(value) {
+      return {
+        searchBy: "genres",
+        search: value,
+        sortBy:
+          this.sortCriteria === "RATING" ? "vote_average" : "release_date",
+        sortOrder: "desc"
+      };
     }
   }
 };
