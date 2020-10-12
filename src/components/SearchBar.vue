@@ -44,7 +44,6 @@
 <script>
 import ButtonGroup from "./ButtonGroup";
 import { SEARCH_SUBMITTED } from "../EventBus";
-import { mapState } from "vuex";
 
 export default {
   name: "SearchBar",
@@ -52,27 +51,9 @@ export default {
   data: () => ({
     searchText: ""
   }),
-  computed: {
-    ...mapState("movies", ["movies", "searchCriteria", "sortCriteria"])
-  },
   methods: {
     submitSearch() {
-      let searchQuery = this.createSearchQuery();
       this.$bus.$emit(SEARCH_SUBMITTED, this.searchText);
-      this.$router.push({
-        name: "home",
-        query: searchQuery
-      });
-      this.$store.dispatch("movies/search", searchQuery);
-    },
-    createSearchQuery() {
-      return {
-        searchBy: this.searchCriteria === "GENRE" ? "genres" : "title",
-        search: this.searchText,
-        sortBy:
-          this.sortCriteria === "RATING" ? "vote_average" : "release_date",
-        sortOrder: "desc"
-      };
     }
   }
 };

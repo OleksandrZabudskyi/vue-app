@@ -1,15 +1,12 @@
 <template>
   <div class="movie-card">
-    <router-link :to="`/movies/${movie.id}`">
-      <v-img
-        class="movie-card__img"
-        :src="urlPath"
-        v-isInViewPort="movie.poster_path"
-        @intersects="addUrlPath($event)"
-        @click.prevent="selectMovie()"
-        @click.native="scrollToTop()"
-      ></v-img>
-    </router-link>
+    <v-img
+      class="movie-card__img"
+      :src="urlPath"
+      v-isInViewPort="movie.poster_path"
+      @intersects="addUrlPath($event)"
+      @click.prevent="selectMovie()"
+    ></v-img>
     <div>
       <v-row align="center" justify="space-between">
         <v-col cols="8">
@@ -34,7 +31,6 @@
 
 <script>
 import { MOVIE_SELECTED } from "../EventBus";
-import { mapState } from "vuex";
 
 export default {
   name: "MovieCard",
@@ -47,32 +43,13 @@ export default {
   data: () => ({
     urlPath: ""
   }),
-  computed: {
-    ...mapState("movies", ["movies"])
-  },
   methods: {
     selectMovie() {
       this.$bus.$emit(MOVIE_SELECTED, this.movie);
-      this.$router.push({ path: `/movies/${this.movie.id}` });
-      this.$store.dispatch(
-        "movies/search",
-        this.createSearchQuery(this.movie.genres[0])
-      );
+      this.$store.dispatch("movies/searchMovieById", this.movie.id);
     },
     addUrlPath(event) {
       this.urlPath = event.detail;
-    },
-    scrollToTop() {
-      window.scrollTo(0, 0);
-    },
-    createSearchQuery(value) {
-      return {
-        searchBy: "genres",
-        search: value,
-        sortBy:
-          this.sortCriteria === "RATING" ? "vote_average" : "release_date",
-        sortOrder: "desc"
-      };
     }
   }
 };

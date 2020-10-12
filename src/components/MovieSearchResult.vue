@@ -6,7 +6,7 @@
           {{ movies.length }} movie found
         </template>
         <template v-if="selectedMovie">
-          Films by {{ selectedMovie.genres[0] }} genre</template
+          Films by {{ selectedMovie.genres | convertToString }} genre</template
         >
       </v-col>
       <v-col cols="4" sm="6" lg="4">
@@ -23,12 +23,7 @@
       </v-col>
     </v-row>
     <v-row align="center" justify="center" class="card-list">
-      <div class="spinner"></div>
-
-      <template v-if="isLoading">
-        <progress-bar entityName="movies"></progress-bar>
-      </template>
-      <template v-else-if="movies.length">
+      <template v-if="movies.length">
         <v-col
           v-for="movie in sortMovies(movies)"
           :key="movie.id"
@@ -51,48 +46,49 @@
 <script>
 import MovieCard from "./MovieCard";
 import ButtonGroup from "./ButtonGroup";
+import {
+  MOVIE_SELECTED,
+  SEARCH_SUBMITTED,
+  HOME_PAGE_APPLIED
+} from "../EventBus";
 import { mapState } from "vuex";
-import ProgressBar from "../components/ProgressBar";
-import { SEARCH_SUBMITTED, HOME_PAGE_APPLIED } from "../EventBus";
 
 export default {
   name: "MovieSearchResult",
-  components: { ProgressBar, ButtonGroup, MovieCard },
-  props: {
-    selectedMovie: {
-      type: Object,
-      default: null
-    }
-  },
+  components: { ButtonGroup, MovieCard },
+
   data: () => ({
-    searchValue: ""
+    searchValue: "",
+    selectedMovie: ""
   }),
   computed: {
-    ...mapState("movies", [
-      "movies",
-      "searchCriteria",
-      "sortCriteria",
-      "isLoading"
-    ])
+    ...mapState("movies", ["movies", "searchCriteria", "sortCriteria"])
   },
   created() {
+    this.$bus.$on(MOVIE_SELECTED, this.addSelectedMovie);
     this.$bus.$on(SEARCH_SUBMITTED, this.addSearchValue);
     this.$bus.$on(HOME_PAGE_APPLIED, this.cleanResult);
+    this.$store.dispatch("movies/populateMovies");
   },
   methods: {
     sortMovies(movies) {
       if (this.sortCriteria === "RATING") {
-        return movies.slice().sort((a, b) => b.vote_average - a.vote_average);
+        return movies.slice().sort((a, b) => b.vote_count - a.vote_count);
       } else if (this.sortCriteria === "RELEASE DATE") {
-        return movies
-          .slice()
-          .sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+        return movies.slice().sort((a, b) => b.release_date - a.release_date);
       }
+    },
+
+    addSelectedMovie(value) {
+      this.selectedMovie = value;
+      this.searchValue = "";
+      this.$store.dispatch("movies/searchByGenres", this.selectedMovie.genres);
     },
 
     addSearchValue(value) {
       this.searchValue = value;
       this.selectedMovie = "";
+      this.$store.dispatch("movies/search", value);
     },
     cleanResult() {
       this.searchValue = "";
@@ -102,7 +98,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .result-bar {
   background-color: #555555;
   width: 100%;

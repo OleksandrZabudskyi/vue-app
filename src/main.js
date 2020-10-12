@@ -5,7 +5,6 @@ import EventBus from "./EventBus";
 import store from "./store/index.js";
 import { install } from "./plugins/plugin";
 import ApiService from "./core/api";
-import router from "./router";
 
 ApiService.init();
 
@@ -17,6 +16,5 @@ new Vue({
   EventBus,
   store,
   vuetify,
-  router,
   render: h => h(App)
 }).$mount("#app");

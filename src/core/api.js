@@ -5,16 +5,10 @@ const ApiService = {
     axios.defaults.baseURL = "http://react-cdp-api.herokuapp.com/";
   },
   getMovies(params) {
-    return axios.get("movies", { params: params }).then(response => {
-      console.log(response);
-      return response.data;
-    });
+    return axios.get("movies", { params: params }).then(result => result.data);
   },
   getMoviesById(id) {
-    return axios.get("movies" + `/${id}`).then(response => {
-      console.log(response);
-      return response;
-    });
+    return axios.get("movies" + `/${id}`);
   }
 };
 
