@@ -2,6 +2,7 @@ import {storyFactory} from '../util/helpers'
 
 import MovieDetails from "../../src/components/MovieDetails";
 import Vuex from "vuex";
+import movies from "../../src/store/modules/movies";
 
 const story = storyFactory({
     components: MovieDetails
@@ -20,21 +21,18 @@ export const asMovieDetails = () => story({
             movies: {
                 namespaced: true,
                 state: {
-                    movies: []
+                    movies: [],
+                    selectedMovie: {
+                        poster_path: "/poster.png",
+                        title: "Four rooms",
+                        genres: ["Action and Adventure"],
+                        release_date: 2014,
+                        vote_average: 4.3,
+                        overview: "This movie features",
+                        runtime: 120
+                    }
                 }
             }
         }
-    }),
-    computed: {
-        movie: () => ({
-            id: 447365,
-            poster_path: "/poster.png",
-            title: "Four rooms",
-            genres: ["Action and Adventure"],
-            release_date: "2014-10-20",
-            vote_average: 4.3,
-            overview: "This movie features",
-            runtime: 120
-        })
-    }
+    })
 })
