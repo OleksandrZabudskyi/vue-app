@@ -2,10 +2,13 @@ import { shallowMount, createLocalVue } from "@vue/test-utils";
 import MovieDetails from "../../src/components/MovieDetails.vue";
 import Vuetify from "../../src/plugins/vuetify";
 import Vuex from "vuex";
+import VueRouter from "vue-router";
+import Details from "@/views/Details";
 
 const localVue = createLocalVue();
 localVue.use(Vuetify);
 localVue.use(Vuex);
+localVue.use(VueRouter);
 localVue.filter("convertToString", () => "Action and Adventure");
 
 describe("MovieDetails", () => {
@@ -13,12 +16,23 @@ describe("MovieDetails", () => {
 
   const props = {
     movie: {
-      id: 12345
+      id: 12345,
+      poster_path: "/poster.png",
+      title: "Four rooms",
+      genres: ["Action and Adventure"],
+      release_date: "2014-10-20",
+      vote_average: 4.3,
+      overview: "This movie features"
     }
   };
 
+  const router = new VueRouter({
+    routes: [{ path: "/movies/:id", name: "details", component: Details }]
+  });
+
   beforeEach(() => {
     wrapper = shallowMount(MovieDetails, {
+      router: router,
       localVue: localVue,
       vuetify: Vuetify,
       propsData: props,
@@ -27,15 +41,7 @@ describe("MovieDetails", () => {
           movies: {
             namespaced: true,
             state: {
-              movies: [],
-              selectedMovie: {
-                poster_path: "/poster.png",
-                title: "Four rooms",
-                genres: ["Action and Adventure"],
-                release_date: 2014,
-                vote_average: 4.3,
-                overview: "This movie features"
-              }
+              movies: []
             }
           }
         }
